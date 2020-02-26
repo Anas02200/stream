@@ -1,0 +1,8 @@
+
+server:
+  port: 9080
+
+kafka:
+  topic:
+    input: user_scores
+    even-output: user_treated
