@@ -28,9 +28,9 @@ import com.test.Kstream.serializers.JsonPOJODeserializer;
 import com.test.Kstream.serializers.JsonPOJOSerializer;
 import com.test.Kstream.serializers.UserSerde;
 
-@Configuration
-@EnableKafka
-@EnableKafkaStreams
+//@Configuration
+//@EnableKafka
+//@EnableKafkaStreams
 public class StreamConfig {
 
 	@Value("${kafka.topic.input}")
