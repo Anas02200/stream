@@ -7,3 +7,39 @@ server:
 #    input: user_scores
 #    even-output: user_treated
 #    
+
+spring.cloud.stream:
+  function.definition: process;sink;receive
+  kafka.streams:
+    binder.configuration:
+      commit.interval.ms: 1000
+      default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      default.value.serde: com.test.Kstream.UserSerde           
+  bindings:
+    process-in-0:
+      destination: pvs
+    process-out-0:
+      destination: lowNum
+      content-type: application/json
+      producer:        use-native-encoding: true
+    process-out-1:
+      destination: highNum
+      content-type: application/json
+      producer:
+        use-native-encoding: true
+    sink-in-0:
+      destination: highNum
+      binder: kafka
+    sink-out-0:
+      destination: rabitoo
+      binder: rabbit
+
+        
+
+    receive-in-0:
+      destination: rabitoo
+      binder: rabbit
+      
+
+
+spring.application.name: kafka-streams-to-rabbitmq
