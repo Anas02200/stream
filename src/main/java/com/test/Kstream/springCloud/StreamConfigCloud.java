@@ -15,7 +15,11 @@ import org.springframework.stereotype.Component;
 import com.test.Kstream.entities.UserEntity;
 
 @Component
-public class StreamConfigCloud {
+public class StreamConfigCloud implements StreamCloudI {
+	/* (non-Javadoc)
+	 * @see com.test.Kstream.springCloud.StreamCloudI#process()
+	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	@Bean
 	public Function<KStream<String, UserEntity>, KStream<String, UserEntity>[]> process() {
@@ -37,6 +41,10 @@ public class StreamConfigCloud {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.test.Kstream.springCloud.StreamCloudI#sink()
+	 */
+	@Override
 	@Bean
 	public Function<UserEntity, Message<UserEntity>> sink() {
 		return input -> {
@@ -48,8 +56,8 @@ public class StreamConfigCloud {
 		};
 
 	};
-	
-	/*@Bean
+/*
+	@Bean
 	public Consumer<String> receive() {
 		return data -> System.out.println("Data received..." + data);
 	}

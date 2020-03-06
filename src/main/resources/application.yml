@@ -36,9 +36,9 @@ spring.cloud.stream:
 
         
 
-    receive-in-0:
-      destination: rabitoo
-      binder: rabbit
+    #receive-in-0:
+      #destination: rabitoo
+      #binder: rabbit
       
 
 
