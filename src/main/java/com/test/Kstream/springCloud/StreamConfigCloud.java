@@ -2,37 +2,64 @@ package com.test.Kstream.springCloud;
 
 import java.nio.charset.Charset;
 import java.util.Random;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.kafka.streams.kstream.KStream;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.Input;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.apache.kafka.streams.kstream.Predicate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 import com.test.Kstream.entities.UserEntity;
 
-@EnableBinding(ProducerChannel.class)
 @Component
-public class StreamConfigCloud {
+public class StreamConfigCloud implements StreamCloudI {
+	/* (non-Javadoc)
+	 * @see com.test.Kstream.springCloud.StreamCloudI#process()
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	@Bean
+	public Function<KStream<String, UserEntity>, KStream<String, UserEntity>[]> process() {
 
-	@StreamListener
-	@SendTo(ProducerChannel.treateduser)
-	public KStream<String, UserEntity> process(
+		Predicate<String, UserEntity> isGood = (k, v) -> v.getCardNumber()<1000;
+		Predicate<String, UserEntity> isntGood = (k, v) -> v.getCardNumber()>1000;
 
-			@Input(ProducerChannel.instream) KStream<String, UserEntity> stream) {
-		return stream.mapValues(v -> {
+		return input -> input.mapValues(v -> {
 			v.setCardNumber((long) (Math.random() * 10000));
 			byte[] array = new byte[7]; // length is bounded by 7 new
 			new Random().nextBytes(array);
 			String generatedString = new String(array, Charset.forName("UTF-8"));
 			v.setName(generatedString);
 
-			System.out.println("Processing :: " + v + "name : " +v.getName()+ "card number :"+v.getCardNumber());
+			System.out.println("Processing :: " + v + "name : " + v.getName() + "card number :" + v.getCardNumber());
 			return v;
 
-		});
+		}).branch(isGood,isntGood);
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.test.Kstream.springCloud.StreamCloudI#sink()
+	 */
+	@Override
+	@Bean
+	public Function<UserEntity, Message<UserEntity>> sink() {
+		return input -> {
+			Message<UserEntity> message = MessageBuilder.withPayload(input).setHeader("key", "lol").build();
+			
+			System.out.println(message);
+			return message;
+
+		};
+
+	};
+/*
+	@Bean
+	public Consumer<String> receive() {
+		return data -> System.out.println("Data received..." + data);
+	}
+*/
 }

@@ -31,7 +31,7 @@ import com.test.Kstream.serializers.UserSerde;
 //@Configuration
 //@EnableKafka
 //@EnableKafkaStreams
-public class StreamConfig {
+public class StreamConfig implements StreamConfigI {
 
 	@Value("${kafka.topic.input}")
 	private String inputTopic;
@@ -39,6 +39,10 @@ public class StreamConfig {
 	@Value("${kafka.topic.even-output}")
 	private String outputTopic;
 
+	/* (non-Javadoc)
+	 * @see com.test.Kstream.config.in#kStreamsConfigs(org.springframework.boot.autoconfigure.kafka.KafkaProperties)
+	 */
+	@Override
 	@Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
 	public KafkaStreamsConfiguration kStreamsConfigs(KafkaProperties kafkaProperties) {
 
@@ -50,6 +54,10 @@ public class StreamConfig {
 		return new KafkaStreamsConfiguration(config);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.test.Kstream.config.in#kStream(org.apache.kafka.streams.StreamsBuilder)
+	 */
+	@Override
 	@Bean
 	public KStream<String, UserEntity> kStream(StreamsBuilder kStreamBuilder) {
 		KStream<String, UserEntity> stream = kStreamBuilder.stream(inputTopic);
