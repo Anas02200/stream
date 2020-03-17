@@ -1,20 +1,22 @@
 package com.test.Kstream.serializers;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import com.test.Kstream.dataTransferObject.BankingInfosDto;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 
 import com.google.gson.Gson;
 import com.test.Kstream.entities.UserEntity;
 
-public class JsonPOJOSerializer implements Serializer<UserEntity> {
+public class JsonPOJOSerializer implements Serializer<BankingInfosDto> {
 
-	private static final Charset CHARSET = Charset.forName("UTF-8");
+	private static final Charset CHARSET = StandardCharsets.UTF_8;
 	static private Gson gson = new Gson();
 
-	public JsonPOJOSerializer() {
+	JsonPOJOSerializer() {
 	}
 
 	@Override
@@ -23,7 +25,7 @@ public class JsonPOJOSerializer implements Serializer<UserEntity> {
 	}
 
 	@Override
-	public byte[] serialize(String topic, UserEntity data) {
+	public byte[] serialize(String topic, BankingInfosDto data) {
 		if (data == null)
 			return null;
 
