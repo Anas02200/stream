@@ -24,7 +24,7 @@ public class TransactionDataDto {
     @JsonProperty("Terminal capture capacity")
     private String terminalCaptureCapacity;
     @JsonProperty("Client presence")
-    private int clientPresence;
+    private String clientPresence;
     @JsonProperty("Terminal data entry")
     private String terminalDataEntry;
     @JsonProperty("Authentication method ")

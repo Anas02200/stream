@@ -1,7 +1,8 @@
 package com.test.Kstream.services;
 
-public interface MapDtoToEntity<T, E> {
-    T MapToEntity(E Dto, Class<T> Entity);
+public interface MapDtoToEntity<T, E, F> {
+    T MapToEntity(F Dto, Class<T> Entity);
 
-    void SetEntityFields(E Dto, T Entity);
+    void SetEntityFields(E Dto, T Entity) throws Exception;
+
 }

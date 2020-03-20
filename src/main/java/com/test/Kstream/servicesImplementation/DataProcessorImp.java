@@ -2,6 +2,7 @@ package com.test.Kstream.servicesImplementation;
 
 import com.test.Kstream.dataTransferObject.BankingInfosDto;
 import com.test.Kstream.entities.BankTransactionEntity;
+import com.test.Kstream.repositories.BankTransactionRepository;
 import com.test.Kstream.services.DataProcessor;
 import com.test.Kstream.services.MapDtoToEntity;
 import org.apache.kafka.streams.kstream.KStream;
@@ -21,7 +22,8 @@ public class DataProcessorImp implements DataProcessor {
     @Autowired
     @Qualifier("MapDtoToTransaction")
     MapDtoToEntity mapDtoToEntity;
-
+    @Autowired
+    BankTransactionRepository bankTransactionRepository;
 
 
     @Bean
@@ -35,8 +37,13 @@ public class DataProcessorImp implements DataProcessor {
         return input -> {
             input.mapValues(value -> {
                 BankTransactionEntity bankTransactionEntity = (BankTransactionEntity) this.mapDtoToEntity
-                        .MapToEntity(value, BankTransactionEntity.class);
-                mapDtoToEntity.SetEntityFields(value, bankTransactionEntity);
+                        .MapToEntity(value.getTransactionData(), BankTransactionEntity.class);
+                try {
+                    mapDtoToEntity.SetEntityFields(value, bankTransactionEntity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                bankTransactionRepository.save(bankTransactionEntity);
                 System.out.println("Processing :: " + bankTransactionEntity.getReceiverName() + bankTransactionEntity.getFullName());
                 return value;
             });

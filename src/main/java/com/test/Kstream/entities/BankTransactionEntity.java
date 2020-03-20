@@ -1,23 +1,24 @@
 package com.test.Kstream.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.test.Kstream.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Calendar;
-import java.util.Date;
 
 @Entity
+@Table(name = "BankTransactions")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class BankTransactionEntity {
+
     @Id
+    @GeneratedValue
     private Long Id;
     private String fullName;
     private Calendar joinDate;
@@ -25,34 +26,45 @@ public class BankTransactionEntity {
     private Long transactionBankAccountNumber;
     private String transactionBankCardNumber;
 
-    @JsonProperty("to")
+    @Column(name = "To")
     private String receiverName;
-    @JsonProperty("to AccountNumber")
+    @Column(name = "ToAccountNumber")
     private String receiverAccountNumber;
-    @JsonProperty("transaction currency")
+    @Column(name = "TransactioncCurrency")
     private String transactionCurrency;
-    @JsonProperty("Activity")
-    private String transactionActivity;
-    @JsonProperty("Terminal capture capacity")
-    private String terminalCaptureCapacity;
-    @JsonProperty("Client presence")
-    private int clientPresence;
-    @JsonProperty("Terminal data entry")
-    private String terminalDataEntry;
-    @JsonProperty("Authentication method ")
-    private String authenticationMethod;
-    @JsonProperty("Process code")
-    private String processCode;
-    @JsonProperty("Response code")
-    private String responseCode;
-    @JsonProperty("Country of the commerce")
-    private String countryOfTheCommerce;
-    @JsonProperty("Authorized / not authorized")
-    private String authorized;
-    @JsonProperty("Amount of the transaction")
-    private float transactionAmount;
-    @JsonProperty("Time of the transaction")
-    private Date date;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Activity")
+    private Activity transactionActivity;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TerminalCaptureCapacity")
+    private TerminalCaptureCapacity terminalCaptureCapacity;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ClientPresence")
+    private ClientPresence clientPresence;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TerminalDataEntry")
+    private TerminalDataEntry terminalDataEntry;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "AmountOfTheTransaction")
+    private AmountOfTransaction transactionAmount;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TimeOfTheTransaction")
+    private TimeOfTransaction date;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "AuthenticationMethod ")
+    private AuthenticationMethod authenticationMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ProcessCode")
+    private ProcessCode processCode;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ResponseCode")
+    private ResponseCode responseCode;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CountryOfTheCommerce")
+    private CountryOfTheCommerce countryOfTheCommerce;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Authorized")
+    private Authorization authorized;
 
 
 }
