@@ -9,7 +9,6 @@ import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
 import com.google.gson.Gson;
-import com.test.Kstream.entities.UserEntity;
 
 public class JsonPOJODeserializer implements Deserializer<BankingInfosDto> {
 

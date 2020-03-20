@@ -6,7 +6,6 @@ import com.test.Kstream.dataTransferObject.BankingInfosDto;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
-import com.test.Kstream.entities.UserEntity;
 
 public class UserSerde implements Serde<BankingInfosDto> {
 	
