@@ -1,12 +1,10 @@
 package com.test.Kstream.servicesImplementation;
 
 import com.test.Kstream.dataTransferObject.BankingInfosDto;
-import com.test.Kstream.entities.BankProfilesEntity;
 import com.test.Kstream.entities.BankTransactionEntity;
-import com.test.Kstream.repositories.BankProfilesRepository;
-import com.test.Kstream.repositories.BankTransactionRepository;
 import com.test.Kstream.services.DataProcessor;
 import com.test.Kstream.services.MapDtoToEntity;
+import com.test.Kstream.services.TransactionProcessor;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +22,9 @@ public class DataProcessorImp implements DataProcessor {
     @Autowired
     @Qualifier("MapDtoToTransaction")
     MapDtoToEntity mapDtoToEntity;
-    @Autowired
-    BankTransactionRepository bankTransactionRepository;
-    @Autowired
-    BankProfilesRepository bankProfilesRepository;
 
+    @Autowired
+    TransactionProcessor transactionProcessor;
 
 
     @Bean
@@ -48,12 +44,7 @@ public class DataProcessorImp implements DataProcessor {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                bankTransactionRepository.save(bankTransactionEntity);
-                if (bankProfilesRepository.findByTransactionBankCardNumber(bankTransactionEntity.getTransactionBankCardNumber())) {
-                            //update profile
-                } else {
-                            //new transaction init
-                }
+                transactionProcessor.processTransaction(bankTransactionEntity);
 
                 System.out.println("Processing :: " + bankTransactionEntity.getReceiverName() + bankTransactionEntity.getFullName());
                 return value;
