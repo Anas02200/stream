@@ -1,7 +1,9 @@
 package com.test.Kstream.servicesImplementation;
 
 import com.test.Kstream.dataTransferObject.BankingInfosDto;
+import com.test.Kstream.entities.BankProfilesEntity;
 import com.test.Kstream.entities.BankTransactionEntity;
+import com.test.Kstream.repositories.BankProfilesRepository;
 import com.test.Kstream.repositories.BankTransactionRepository;
 import com.test.Kstream.services.DataProcessor;
 import com.test.Kstream.services.MapDtoToEntity;
@@ -24,6 +26,9 @@ public class DataProcessorImp implements DataProcessor {
     MapDtoToEntity mapDtoToEntity;
     @Autowired
     BankTransactionRepository bankTransactionRepository;
+    @Autowired
+    BankProfilesRepository bankProfilesRepository;
+
 
 
     @Bean
@@ -44,6 +49,12 @@ public class DataProcessorImp implements DataProcessor {
                     e.printStackTrace();
                 }
                 bankTransactionRepository.save(bankTransactionEntity);
+                if (bankProfilesRepository.findByTransactionBankCardNumber(bankTransactionEntity.getTransactionBankCardNumber())) {
+                            //update profile
+                } else {
+                            //new transaction init
+                }
+
                 System.out.println("Processing :: " + bankTransactionEntity.getReceiverName() + bankTransactionEntity.getFullName());
                 return value;
             });
