@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TransactionProcessorImp implements TransactionProcessor {
@@ -31,9 +32,9 @@ public class TransactionProcessorImp implements TransactionProcessor {
     }
 
     @Override
-    public void calculateFullProfile(List<Float> firstUpdateProfile, float transactionsCount, Activity activity, AmountOfTransaction amount,
-                                     Authorization authorization, CountryOfTheCommerce country, TimeOfTransaction time, ProcessCode processCode,
-                                     ResponseCode responseCode) {
+    public List<Float> calculateFullProfile(List<Float> firstUpdateProfile, float transactionsCount, Activity activity, AmountOfTransaction amount,
+                                            Authorization authorization, CountryOfTheCommerce country, TimeOfTransaction time,
+                                            ProcessCode processCode, ResponseCode responseCode) {
         List<Float> newActivity = profileProcessor.calculateActivityProfile(firstUpdateProfile.subList(0, 7), transactionsCount, activity);
         List<Float> newAmount = profileProcessor.calculateAmountProfile(firstUpdateProfile.subList(7, 12), transactionsCount, amount);
         List<Float> newAuth = profileProcessor.calculateAuthProfile(firstUpdateProfile.subList(12, 14), transactionsCount, authorization);
@@ -42,6 +43,11 @@ public class TransactionProcessorImp implements TransactionProcessor {
         List<Float> newResponse = profileProcessor.calculateRespProfile(firstUpdateProfile.subList(22, 27), transactionsCount, responseCode);
         List<Float> newTime = profileProcessor.calculateTimeProfile(firstUpdateProfile.subList(27, 31), transactionsCount, time);
 
+//System.out.println("ss " + newActivity + newAmount+ newAuth+ newCountry+ newProcess+ newResponse+newTime);
+        List<Float> newProfile = new ArrayList<>();
+        Stream.of(newActivity, newAmount, newAuth, newCountry, newProcess, newResponse, newTime).forEach(newProfile::addAll);
+
+        return newProfile;
 
     }
 
@@ -75,16 +81,16 @@ public class TransactionProcessorImp implements TransactionProcessor {
                     bankProfilesEntity.getResponseGroup5(), bankProfilesEntity.getTimeGroup1(), bankProfilesEntity.getTimeGroup2(),
                     bankProfilesEntity.getTimeGroup3(), bankProfilesEntity.getTimeGroup4()));
             List<Float> firstUpdate = actualProfile.stream().map(n -> n * factor).collect(Collectors.toList());
-
-            calculateFullProfile(firstUpdate,transactionsCount,bankTransactionEntity.getTransactionActivity(),
-                    bankTransactionEntity.getTransactionAmount(),bankTransactionEntity.getAuthorized(),
-                    bankTransactionEntity.getCountryOfTheCommerce(),bankTransactionEntity.getDate(),bankTransactionEntity.getProcessCode(),
+            System.out.println("first"+ firstUpdate);
+            List<Float> e = calculateFullProfile(firstUpdate, transactionsCount, bankTransactionEntity.getTransactionActivity(),
+                    bankTransactionEntity.getTransactionAmount(), bankTransactionEntity.getAuthorized(),
+                    bankTransactionEntity.getCountryOfTheCommerce(), bankTransactionEntity.getDate(), bankTransactionEntity.getProcessCode(),
                     bankTransactionEntity.getResponseCode());
 
+            System.out.println("actual " +actualProfile);
+            System.out.println("updating profile and calculating distance" + transactionsCount);
 
-            System.out.println("updating profile and calculating distance" + transactionsCount + actualProfile.subList(0, 7) + profileProcessor
-                    .calculateActivityProfile(actualProfile.subList(0, 7), transactionsCount, bankTransactionEntity.getTransactionActivity()));
-            System.out.println(actualProfile);
+            System.out.println("updated"+e);
         } else {
 
             // init the profile with random numbers and saving it
