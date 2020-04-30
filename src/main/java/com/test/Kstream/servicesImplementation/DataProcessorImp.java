@@ -42,13 +42,16 @@ public class DataProcessorImp implements DataProcessor {
     }
 
     @Bean
-    public Function<KStream<String, BankingInfosDto>, KStream<String, BankingInfosDto>[]> process() {
+    public Function<KStream<String, BankingInfosDto>, KStream<String, String>[]> process() {
 
-        Predicate<String, BankingInfosDto> confirmTransaction = (k, value) -> (dis) < 0.05f;
+        Predicate<String, String> confirmTransaction = (k, value) -> (dis) > 0.6f;
 
-        Predicate<String, BankingInfosDto> sendNotification = (k, value) -> (dis) <= 0.6f;
+        Predicate<String, String> sendNotification = (k, value) -> (dis) <= 0.6f;
 
-        Predicate<String, BankingInfosDto> sendSms = (k, value) -> (dis) > 0.6f;
+        Predicate<String, String> sendSms = (k, value) -> (dis) > 0.6f;
+
+
+
         //testing processing for the moment
         return input -> {
 
@@ -60,7 +63,12 @@ public class DataProcessorImp implements DataProcessor {
             });
 
 
-            return input.branch(confirmTransaction, sendNotification, sendSms);
+            return input.mapValues(value -> {
+                return value.getIdentityCardNumber();
+            }).branch(confirmTransaction, sendNotification, sendSms);
+
+
+                    //input.branch(confirmTransaction, sendNotification, sendSms);
         };
 
     }
@@ -68,9 +76,9 @@ public class DataProcessorImp implements DataProcessor {
 
     @Override
     @Bean
-    public Function<BankingInfosDto, Message<BankingInfosDto>> sink() {
+    public Function<String, Message<String>> sink() {
         return input -> {
-            Message<BankingInfosDto> message = MessageBuilder.withPayload(input).setHeader("key", "lol").build();
+            Message<String> message = MessageBuilder.withPayload(input).setHeader("key", "lol").build();
 
             System.out.println(message);
             return message;

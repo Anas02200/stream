@@ -10,8 +10,8 @@ public interface DataProcessor {
 
 	float helperFunction(BankingInfosDto bankingInfosDto);
 
-	Function<KStream<String, BankingInfosDto>, KStream<String, BankingInfosDto>[]> process();
+	Function<KStream<String, BankingInfosDto>, KStream<String, String>[]> process();
 
-	Function<BankingInfosDto, Message<BankingInfosDto>> sink();
+	Function<String, Message<String>> sink();
 
 }
