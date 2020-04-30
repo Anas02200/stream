@@ -38,7 +38,7 @@ public class MapDtoToTransaction implements MapDtoToEntity<BankTransactionEntity
         Entity.setTerminalCaptureCapacity(TerminalCaptureCapacity.fromString(Dto.getTransactionData().getTerminalCaptureCapacity()));
         Entity.setTerminalDataEntry(TerminalDataEntry.fromString(Dto.getTransactionData().getTerminalDataEntry()));
         Entity.setDate(TimeOfTransaction.fromString(Dto.getTransactionData().getDate()));
-
+        Entity.setIdentityCardNumber(Dto.getIdentityCardNumber());
         Entity.setFullName(Dto.getFullName());
         Entity.setJoinDate(Dto.getJoinDate());
         Entity.setTransactionBankCardNumber(Dto.getTransactionBankCardEntity().getCardNumber());

@@ -8,6 +8,8 @@ import org.springframework.messaging.Message;
 
 public interface DataProcessor {
 
+	float helperFunction(BankingInfosDto bankingInfosDto);
+
 	Function<KStream<String, BankingInfosDto>, KStream<String, BankingInfosDto>[]> process();
 
 	Function<BankingInfosDto, Message<BankingInfosDto>> sink();
