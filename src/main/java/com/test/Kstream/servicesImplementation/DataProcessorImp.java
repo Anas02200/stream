@@ -7,7 +7,6 @@ import com.test.Kstream.services.MapDtoToEntity;
 import com.test.Kstream.services.TransactionProcessor;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Predicate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.support.MessageBuilder;
@@ -22,6 +21,7 @@ public class DataProcessorImp implements DataProcessor {
     private final MapDtoToEntity mapDtoToEntity;
 
     private final TransactionProcessor transactionProcessor;
+    private float dis = 1f;
 
     public DataProcessorImp(@Qualifier("MapDtoToTransaction") MapDtoToEntity mapDtoToEntity, TransactionProcessor transactionProcessor) {
         this.mapDtoToEntity = mapDtoToEntity;
@@ -44,18 +44,23 @@ public class DataProcessorImp implements DataProcessor {
     @Bean
     public Function<KStream<String, BankingInfosDto>, KStream<String, BankingInfosDto>[]> process() {
 
-        Predicate<String, BankingInfosDto> confirmTransaction = (k, value) -> helperFunction(value) < 0.05f;
+        Predicate<String, BankingInfosDto> confirmTransaction = (k, value) -> (dis) < 0.05f;
 
-        Predicate<String, BankingInfosDto> sendNotification = (k, value) -> helperFunction(value) <= 0.6f;
-        //add logic later
-        Predicate<String, BankingInfosDto> sendSms =(k, value) -> helperFunction(value) > 0.6f;
+        Predicate<String, BankingInfosDto> sendNotification = (k, value) -> (dis) <= 0.6f;
 
-
+        Predicate<String, BankingInfosDto> sendSms = (k, value) -> (dis) > 0.6f;
         //testing processing for the moment
         return input -> {
-            //input.mapValues(value -> helperFunction(value));
 
-            return input.branch(confirmTransaction, sendNotification,sendSms);
+            input.mapValues(value -> {
+
+                this.dis = helperFunction(value);
+                System.out.println("dddistance is :" + this.dis);
+                return dis;
+            });
+
+
+            return input.branch(confirmTransaction, sendNotification, sendSms);
         };
 
     }
@@ -73,10 +78,5 @@ public class DataProcessorImp implements DataProcessor {
         };
 
     }
-/*
-	@Bean
-	public Consumer<String> receive() {
-		return data -> System.out.println("Data received..." + data);
-	}
-*/
+
 }
