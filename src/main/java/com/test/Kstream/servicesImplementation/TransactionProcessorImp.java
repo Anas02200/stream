@@ -8,7 +8,6 @@ import com.test.Kstream.repositories.BankTransactionRepository;
 import com.test.Kstream.services.DistanceProcessor;
 import com.test.Kstream.services.ProfileProcessor;
 import com.test.Kstream.services.TransactionProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -124,7 +123,7 @@ public class TransactionProcessorImp implements TransactionProcessor {
 
 
     @Override
-    public void processTransaction(BankTransactionEntity bankTransactionEntity) {
+    public float processTransaction(BankTransactionEntity bankTransactionEntity) {
         //save transaction to the transactions list
         bankTransactionRepository.saveAndFlush(bankTransactionEntity);
         float transactionsCount = bankTransactionRepository
@@ -139,27 +138,32 @@ public class TransactionProcessorImp implements TransactionProcessor {
                     bankTransactionEntity.getCountryOfTheCommerce(), bankTransactionEntity.getDate(), bankTransactionEntity.getProcessCode(),
                     bankTransactionEntity.getResponseCode());
             //generate alert ??
-            // calculate and update new profile
-            System.out.println("code " + bankTransactionEntity.getProcessCode());
-            List<Float> newProfile = calculateNewProfile(actualProfile, transactionsCount, bankTransactionEntity.getTransactionActivity(),
-                    bankTransactionEntity.getTransactionAmount(), bankTransactionEntity.getAuthorized(),
-                    bankTransactionEntity.getCountryOfTheCommerce(), bankTransactionEntity.getDate(), bankTransactionEntity.getProcessCode(),
-                    bankTransactionEntity.getResponseCode());
+            if (dist > 0.9f) {
+                System.out.println("Alert , will send alert now");
+                return dist;
+            } else {
+                // calculate and update new profile
+                System.out.println("code " + bankTransactionEntity.getProcessCode());
+                List<Float> newProfile = calculateNewProfile(actualProfile, transactionsCount, bankTransactionEntity.getTransactionActivity(),
+                        bankTransactionEntity.getTransactionAmount(), bankTransactionEntity.getAuthorized(),
+                        bankTransactionEntity.getCountryOfTheCommerce(), bankTransactionEntity.getDate(), bankTransactionEntity.getProcessCode(),
+                        bankTransactionEntity.getResponseCode());
 
-            saveNewProfile(getProfileId(bankTransactionEntity.getTransactionBankCardNumber()), newProfile,
-                    bankTransactionEntity.getTransactionBankCardNumber());
+                saveNewProfile(getProfileId(bankTransactionEntity.getTransactionBankCardNumber()), newProfile,
+                        bankTransactionEntity.getTransactionBankCardNumber());
 
 
-            System.out.println("actual " + actualProfile);
-            System.out.println("updating profile and calculating distance" + transactionsCount);
-            System.out.println("updated" + newProfile);
-            System.out.println("distance" + dist);
-
+                System.out.println("actual " + actualProfile);
+                System.out.println("updating profile and calculating distance" + transactionsCount);
+                System.out.println("updated" + newProfile);
+                System.out.println("distance" + dist);
+                return dist;
+            }
         } else {
 
             // init the profile with random numbers and saving it
             bankProfilesRepository.saveAndFlush(profileProcessor.initializeProfile(bankTransactionEntity.getTransactionBankCardNumber()));
-
+            return 10f;
 
         }
 

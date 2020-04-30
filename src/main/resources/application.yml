@@ -18,17 +18,25 @@ spring.cloud.stream:
     process-in-0:
       destination: pvs
     process-out-0:
-      destination: lowNum
+      destination: ConfirmedTransaction
       content-type: application/json
       producer:
         use-native-encoding: true
     process-out-1:
-      destination: highNum
+      destination: SendNotification
       content-type: application/json
       producer:
         use-native-encoding: true
+    process-out-2:
+      destination: SendSms
+      content-type: application/json
+      producer:
+        use-native-encoding: true
+
+
+
     sink-in-0:
-      destination: highNum
+      destination: SendNotification
       binder: kafka
     sink-out-0:
       destination: rabitoo
