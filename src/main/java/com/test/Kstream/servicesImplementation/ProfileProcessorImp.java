@@ -15,18 +15,17 @@ public class ProfileProcessorImp implements ProfileProcessor {
     @Override
     public BankProfilesEntity initializeProfile(String cardNumber) {
         Random rand = new Random();
-        BankProfilesEntity bankProfilesEntity = BankProfilesEntity.builder().transactionBankCardNumber(cardNumber).activityGroup1(rand.nextFloat())
-                .activityGroup2(rand.nextFloat()).activityGroup3(rand.nextFloat()).activityGroup4(rand.nextFloat()).activityGroup5(rand.nextFloat())
-                .activityGroup6(rand.nextFloat()).activityGroup7(rand.nextFloat()).amountGroup1(rand.nextFloat()).amountGroup2(rand.nextFloat())
-                .amountGroup3(rand.nextFloat()).amountGroup4(rand.nextFloat()).amountGroup5(rand.nextFloat()).authorizationGroup1(rand.nextFloat())
-                .authorizationGroup2(rand.nextFloat()).countryGroup1(rand.nextFloat()).countryGroup2(rand.nextFloat()).countryGroup3(rand.nextFloat())
-                .processGroup1(rand.nextFloat()).processGroup2(rand.nextFloat()).processGroup3(rand.nextFloat()).processGroup4(rand.nextFloat())
-                .processGroup5(rand.nextFloat()).responseGroup1(rand.nextFloat()).responseGroup2(rand.nextFloat()).responseGroup3(rand.nextFloat())
-                .responseGroup4(rand.nextFloat()).responseGroup5(rand.nextFloat()).timeGroup1(rand.nextFloat()).timeGroup2(rand.nextFloat())
-                .timeGroup3(rand.nextFloat()).timeGroup4(rand.nextFloat()).build();
 
 
-        return bankProfilesEntity;
+        return BankProfilesEntity.builder().transactionBankCardNumber(cardNumber).activityGroup1(1f/7f)
+                .activityGroup2(1f/7f).activityGroup3(1f/7f).activityGroup4(1f/7f).activityGroup5(1f/7f)
+                .activityGroup6(1f/7f).activityGroup7(1f/7f).amountGroup1(1f/5f).amountGroup2(1f/5f)
+                .amountGroup3(1f/5f).amountGroup4(1f/5f).amountGroup5(1f/5f).authorizationGroup1(1f/2f)
+                .authorizationGroup2(1f/2f).countryGroup1(1f/3f).countryGroup2(1f/3f).countryGroup3(1f/3f)
+                .processGroup1(1f/5f).processGroup2(1f/5f).processGroup3(1f/5f).processGroup4(1f/5f)
+                .processGroup5(1f/5f).responseGroup1(1f/5).responseGroup2(1f/5f).responseGroup3(1f/5f)
+                .responseGroup4(1f/5f).responseGroup5(1f/5f).timeGroup1(1f/4f).timeGroup2(1f/4f)
+                .timeGroup3(1f/4f).timeGroup4(1f/4f).build();
     }
 
     @Override
